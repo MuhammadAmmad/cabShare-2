@@ -4,10 +4,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONObject;
 
 import java.io.InputStream;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Ujjwal on 24-06-2015.
@@ -20,16 +22,26 @@ public class DetailDriver {
     String backgroundCheck;
     Bitmap driverPic;
 
-    DetailDriver(JSONObject driverData){
-        try{
-            if(driverData.has("drivername")) name = driverData.getString("drivername");
-            if(driverData.has("driverpic")) picURL = driverData.getString("driverpic");
-            if(driverData.has("driverphone")) phone = driverData.getString("driverphone");
-            if(driverData.has("driverbgc")) backgroundCheck = driverData.getString("driverbgc");
+    DetailDriver(JSONObject driverData) {
+        try {
+            if (driverData.has("drivername")) name = driverData.getString("drivername");
+            if (driverData.has("driverpic")) picURL = driverData.getString("driverpic");
+            if (driverData.has("driverphone")) phone = driverData.getString("driverphone");
+            if (driverData.has("driverbgc")) backgroundCheck = driverData.getString("driverbgc");
             driverPic = new DownloadImageTask().execute(picURL).get();
-        }catch(Exception e){
+        } catch (Exception e) {
             Log.d("Exception", "Driver Data");
         }
+    }
+
+    DetailDriver(String picurl){
+        picURL = picurl;
+        try{
+            driverPic = new DownloadImageTask().execute(picURL).get();
+        }catch (Exception e){
+            Log.e("Exception", "Driver Pic not downloaded, Connection Error");
+        }
+
     }
 
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {

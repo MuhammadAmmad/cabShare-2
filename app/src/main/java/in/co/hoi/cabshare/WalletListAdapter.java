@@ -174,7 +174,7 @@ public class WalletListAdapter  extends BaseAdapter implements View.OnClickListe
                 holder.detail.setText("RIDE");
             }
 
-            holder.time.setText(tempValues.recordDateTime);
+            holder.time.setText(tempValues.recordDateTime.substring(0,tempValues.recordDateTime.length() - 5));
             holder.amount.setText(res.getString(R.string.Rs)+" "+tempValues.amount);
 
             if(holder.type == 5){
@@ -220,7 +220,7 @@ public class WalletListAdapter  extends BaseAdapter implements View.OnClickListe
                 // Create the AlertDialog
                 final AlertDialog dialog = builder.create();
                 try{
-                    Double distCharge = rideInfo.getDouble("costincurred") - (rideInfo.getDouble("tolltax") + rideInfo.getDouble("timeincurred") * 0.5);
+                    Double distCharge = rideInfo.getDouble("costincurred") - (rideInfo.getDouble("timeincurred") * 0.5);
 
                     TextView sourceAdd = (TextView) dView.findViewById(R.id.source);
                     sourceAdd.setText(rideInfo.getString("origaddress1") + rideInfo.getString("origaddress2"));
@@ -248,7 +248,7 @@ public class WalletListAdapter  extends BaseAdapter implements View.OnClickListe
                     tolltax.setText(res.getString(R.string.Rs) + ((double) Math.round(rideInfo.getDouble("tolltax")* 100) / 100));
 
                     TextView fare = (TextView) dView.findViewById(R.id.fare);
-                    fare.setText(res.getString(R.string.Rs) + ((double) Math.round(rideInfo.getDouble("costincurred")* 100) / 100));
+                    fare.setText(res.getString(R.string.Rs) + ((double) Math.round(rideInfo.getDouble("costincurred")*100 + rideInfo.getDouble("tolltax")* 100) / 100));
 
                 }catch(Exception e){
                     Log.d("EXCEPTION", e.getMessage());

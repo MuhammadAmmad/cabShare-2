@@ -82,7 +82,7 @@
                         android:gravity="center"
                         android:textSize="35dp"
                         android:id="@+id/distance"
-                        android:text="45"
+                        android:text=""
                         android:layout_gravity="center_horizontal" />
 
                     <TextView android:layout_width="wrap_content"
@@ -98,7 +98,7 @@
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:background="@color/grey"
+                    android:background="@color/darkgrey"
                     />
 
                 <LinearLayout
@@ -144,17 +144,17 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/driverPic"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:layout_gravity="center"
-                android:layout_margin="15dp"
+                android:layout_margin="10dp"
                 android:src="@drawable/user1" />
 
             <RatingBar
                 android:id="@+id/rating_bar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_gravity="center_vertical"
                 style="?android:attr/ratingBarStyle"
                 android:numStars="5"/>
 

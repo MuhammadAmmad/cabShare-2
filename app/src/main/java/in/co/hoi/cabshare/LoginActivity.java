@@ -2,6 +2,7 @@ package in.co.hoi.cabshare;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -13,6 +14,8 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -52,8 +55,6 @@ import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.google.android.gms.iid.InstanceID;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -103,6 +104,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     private View mLoginFormView;
     ObscuredSharedPreferences prefs;
     private String authenticationHeader;
+    private String mPhone = "";
 
     private LoginButton loginButtonFacebook;
     private CallbackManager callbackManager;
@@ -142,18 +144,12 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                             accessToken, "/me/friends",
                             null, HttpMethod.GET, new GraphRequest.Callback() {
                         public void onCompleted(GraphResponse response) {
-
-
                         }
                     }
                     ).executeAsync().get();
                     JSONObject resp = null;
-                    try {
-                        resp = res.get(0).getJSONObject();
-                        numberOfFriends = (resp.getJSONObject("summary")).getInt("total_count");
-                    } catch (JSONException e) {
-                        Log.d("EXCEPTION", e.getMessage());
-                    }
+                    resp = res.get(0).getJSONObject();
+                    numberOfFriends = (resp.getJSONObject("summary")).getInt("total_count");
                     GraphRequest request = GraphRequest.newMeRequest(
                             accessToken,
                             new GraphRequest.GraphJSONObjectCallback() {
@@ -166,20 +162,19 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                     request.setParameters(parameters);
                     res = request.executeAsync().get();
                     facebookLoginDetails = res.get(0).getJSONObject();
-
+                    if (numberOfFriends >= 50) {
+                        try {
+                            createSignUpDialog();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        //todo show error dialog : signup failed
+                        Toast.makeText(getApplicationContext(), "You should have atleast 50 friends on facebook", Toast.LENGTH_LONG).show();
+                    }
                 } catch (Exception e) {
                     Log.d("EXCEPTION", e.getMessage());
-                }
-
-                if (numberOfFriends >= 20) {
-                    try {
-                        createSignUpDialog();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    //todo show error dialog : signup failed
-                    Toast.makeText(getApplicationContext(), "Your Facebook Account doesnot have more than 20 friends", Toast.LENGTH_LONG).show();
+                    createAlertDialog("Error", "Action Failed. Please try again");
                 }
                 LoginManager.getInstance().logOut();
             }
@@ -187,18 +182,20 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             @Override
             public void onCancel() {
                 Log.i("LOGIN", "Facebook Login Cancelled");
+                createAlertDialog("Error", "Action Cancelled");
             }
 
             @Override
             public void onError(FacebookException exception) {
                 Log.i("LOGIN", exception.getMessage());
+                createAlertDialog("Error", "Facebook signup failed");
             }
         });
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         mPasswordView = (EditText) findViewById(R.id.password);
 
-        ckeckForServices();
+        checkForServices(true);
 
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -244,13 +241,16 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                             public void onSuccess(LoginResult loginResult) {
                                 Log.d("Success", "Login");
                             }
+
                             @Override
                             public void onCancel() {
-
+                                Toast.makeText(getApplicationContext(), "Action Failed", Toast.LENGTH_LONG).show();
                             }
+
                             @Override
                             public void onError(FacebookException exception) {
                                 Log.e("Exception", exception.getMessage());
+                                Toast.makeText(getApplicationContext(), "Action Failed", Toast.LENGTH_LONG).show();
                             }
                         });
                 LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("public_profile", "user_friends"));
@@ -294,12 +294,9 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                                             }
                                             ).executeAsync().get();
                                             JSONObject resp = null;
-                                            try {
-                                                resp = res.get(0).getJSONObject();
-                                                numberOfFriends = (resp.getJSONObject("summary")).getInt("total_count");
-                                            } catch (JSONException e) {
-                                                Log.d("EXCEPTION", e.getMessage());
-                                            }
+                                            resp = res.get(0).getJSONObject();
+                                            numberOfFriends = (resp.getJSONObject("summary")).getInt("total_count");
+
                                             GraphRequest request = GraphRequest.newMeRequest(
                                                     accessToken,
                                                     new GraphRequest.GraphJSONObjectCallback() {
@@ -312,20 +309,19 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                                             request.setParameters(parameters);
                                             res = request.executeAsync().get();
                                             facebookLoginDetails = res.get(0).getJSONObject();
-
+                                            if (numberOfFriends >= 50) {
+                                                try {
+                                                    createSignUpDialog();
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            } else {
+                                                //todo show error dialog : signup failed
+                                                Toast.makeText(getApplicationContext(), "You should have atleast 50 friends on facebook", Toast.LENGTH_LONG).show();
+                                            }
                                         } catch (Exception e) {
                                             Log.d("EXCEPTION", e.getMessage());
-                                        }
-
-                                        if (numberOfFriends >= 20) {
-                                            try {
-                                                createSignUpDialog();
-                                            } catch (JSONException e) {
-                                                e.printStackTrace();
-                                            }
-                                        } else {
-                                            //todo show error dialog : signup failed
-                                            Toast.makeText(getApplicationContext(), "Your Facebook Account doesnot have more than 20 friends", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getApplicationContext(), "Action Failed", Toast.LENGTH_LONG).show();
                                         }
                                         LoginManager.getInstance().logOut();
                                     }
@@ -333,11 +329,13 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                                     @Override
                                     public void onCancel() {
                                         Log.i("LOGIN", "Facebook Login Cancelled");
+                                        Toast.makeText(getApplicationContext(), "Action Failed", Toast.LENGTH_LONG).show();
                                     }
 
                                     @Override
                                     public void onError(FacebookException exception) {
                                         Log.i("LOGIN", exception.getMessage());
+                                        Toast.makeText(getApplicationContext(), "Connection Problem", Toast.LENGTH_LONG).show();
                                     }
                                 });
                             }
@@ -358,30 +356,33 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                         } else if (mobileNo.length() != 10 || !mobileNo.matches("[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]")) {
                             otp.setError("wrong mobile number");
                         } else {
-
-
                             Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
                                 @Override
                                 public void onResponse(JSONObject response) {
                                     try {
-                                        System.out.println(response.toString());
+                                        //system.out.println(response.toString());
 
                                         if (response.getBoolean("response")) {
                                             dialog.dismiss();
+                                            Toast.makeText(getApplicationContext(), "OTP sent. Please wait for five minutes!", Toast.LENGTH_LONG).show();
                                         } else {
                                             otp.setError("Error! Please resend");
+                                            Toast.makeText(getApplicationContext(), "OTP not sent. Please try again", Toast.LENGTH_LONG).show();
                                         }
                                     } catch (Exception e) {
                                         Log.e("EXCEPTION", e.getMessage());
+                                        createAlertDialog("Error", "Action Failed. Please try again");
                                     }
                                 }
                             };
                             JSONObject data = new JSONObject();
                             try {
+
                                 data = new JSONObject().accumulate("otp", Profile.getCurrentProfile().getId());
                                 Log.d("FACEBOOK_ID", Profile.getCurrentProfile().getId());
-                            } catch (JSONException e) {
+                            } catch (Exception e) {
                                 Log.e("EXCEPTION", e.getMessage());
+                                Toast.makeText(getApplicationContext(), "Error Occured", Toast.LENGTH_LONG).show();
                             }
                             volleyRequests(data, "http://www.hoi.co.in/password/changepassword/" + mobileNo,
                                     listener);
@@ -405,12 +406,9 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                                         }
                                         ).executeAsync().get();
                                         JSONObject resp = null;
-                                        try {
-                                            resp = res.get(0).getJSONObject();
-                                            numberOfFriends = (resp.getJSONObject("summary")).getInt("total_count");
-                                        } catch (JSONException e) {
-                                            Log.d("EXCEPTION", e.getMessage());
-                                        }
+                                        resp = res.get(0).getJSONObject();
+                                        numberOfFriends = (resp.getJSONObject("summary")).getInt("total_count");
+
                                         GraphRequest request = GraphRequest.newMeRequest(
                                                 accessToken,
                                                 new GraphRequest.GraphJSONObjectCallback() {
@@ -423,20 +421,16 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                                         request.setParameters(parameters);
                                         res = request.executeAsync().get();
                                         facebookLoginDetails = res.get(0).getJSONObject();
+                                        if (numberOfFriends >= 50) {
+                                            createSignUpDialog();
+                                        } else {
+                                            //todo show error dialog : signup failed
+                                            Toast.makeText(getApplicationContext(), "You should have atleast 50 friends on facebook", Toast.LENGTH_LONG).show();
+                                        }
 
                                     } catch (Exception e) {
                                         Log.d("EXCEPTION", e.getMessage());
-                                    }
-
-                                    if (numberOfFriends >= 20) {
-                                        try {
-                                            createSignUpDialog();
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
-                                    } else {
-                                        //todo show error dialog : signup failed
-                                        Toast.makeText(getApplicationContext(), "Your Facebook Account doesnot have more than 20 friends", Toast.LENGTH_LONG).show();
+                                        createAlertDialog("Error", "Action Failed. Please try again");
                                     }
                                     LoginManager.getInstance().logOut();
                                 }
@@ -444,11 +438,13 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                                 @Override
                                 public void onCancel() {
                                     Log.i("LOGIN", "Facebook Login Cancelled");
+                                    createAlertDialog("Error", "Action Cancelled");
                                 }
 
                                 @Override
                                 public void onError(FacebookException exception) {
                                     Log.i("LOGIN", exception.getMessage());
+                                    createAlertDialog("Error", "Action Failed. Please try again");
                                 }
                             });
                         }
@@ -457,29 +453,27 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
             }
         });
-
-        InstanceID instanceID = InstanceID.getInstance(this);
-        try {
-            String regId = instanceID.getToken(getString(R.string.gcm_defaultSenderId), GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
-            Log.d("RegID", regId);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
     }
 
-    private void ckeckForServices() {
+    private void checkForServices(boolean check) {
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+        ConnectivityManager cm =
+                (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             Log.d("LOCATION MANAGER", "GPS Not Enabled");
             Intent callGPSSettingIntent = new Intent(
                     android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivity(callGPSSettingIntent);
             super.finish();
-        }else{
+        } else if (!isConnected) {
+            createAlertDialog("No Connection", "Please check your Internet Connectivity!");
+        } else if (check) {
             autoLogin();
         }
-
     }
 
 
@@ -496,14 +490,14 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         mEmailView.setError(null);
         mPasswordView.setError(null);
 
+        checkForServices(false);
+
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
-
-
 
 
         // Check for a valid password, if the user entered one.
@@ -563,7 +557,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
     private boolean isPasswordValid(String password) {
 
-        System.out.println(password.length());
+        //system.out.println(password.length());
         return (password.length() > 4);
     }
 
@@ -623,11 +617,38 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         mEmailView.setAdapter(adapter);
     }
 
+    public void createAlertDialog(String title, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // Get the layout inflater
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dView = inflater.inflate(R.layout.dialog_alert, null);
+        // Add the buttons
+        TextView msg = (TextView) dView.findViewById(R.id.alert_message);
+        TextView alertTitle = (TextView) dView.findViewById(R.id.alertTitle);
+        alertTitle.setText(title);
+        msg.setText(message);
+        builder.setView(dView)
+                // Add action buttons
+                .setPositiveButton(R.string.close, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        dialog.getButton(Dialog.BUTTON_NEGATIVE).setVisibility(View.INVISIBLE);
+
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode,resultCode,data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     public void createSignUpDialog() throws JSONException {
@@ -637,12 +658,12 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         LayoutInflater inflater = this.getLayoutInflater();
         View dView = inflater.inflate(R.layout.signup_dialog, null);
 
-        EditText firstName = (EditText)dView.findViewById(R.id.first_name);
-        EditText lastName = (EditText)dView.findViewById(R.id.last_name);
-        final EditText email = (EditText)dView.findViewById(R.id.email);
-        final EditText mobile = (EditText)dView.findViewById(R.id.mobile);
-        final EditText password = (EditText)dView.findViewById(R.id.password);
-        final EditText confirmPassword = (EditText)dView.findViewById(R.id.confirm_password);
+        EditText firstName = (EditText) dView.findViewById(R.id.first_name);
+        EditText lastName = (EditText) dView.findViewById(R.id.last_name);
+        final EditText email = (EditText) dView.findViewById(R.id.email);
+        final EditText mobile = (EditText) dView.findViewById(R.id.mobile);
+        final EditText password = (EditText) dView.findViewById(R.id.password);
+        final EditText confirmPassword = (EditText) dView.findViewById(R.id.confirm_password);
 
         // Add the buttons
         builder.setView(dView)
@@ -660,48 +681,47 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         // Set other dialog properties
         // Create the AlertDialog
         final AlertDialog dialog = builder.create();
-        String picurl = "https://graph.facebook.com/"+facebookLoginDetails.getString("id")+"/picture";
+        String picurl = "https://graph.facebook.com/" + facebookLoginDetails.getString("id") + "/picture";
         de.hdodenhof.circleimageview.CircleImageView pic = (de.hdodenhof.circleimageview.CircleImageView)
                 dView.findViewById(R.id.profile_pic);
         new DownloadImageTask(pic).execute(picurl);
 
-        facebookLoginDetails.accumulate("picurl",picurl);
-        if(facebookLoginDetails.has("first_name") && !facebookLoginDetails.isNull("first_name")) {
+        facebookLoginDetails.accumulate("picurl", picurl);
+        if (facebookLoginDetails.has("first_name") && !facebookLoginDetails.isNull("first_name")) {
             firstName.setText(facebookLoginDetails.getString("first_name"));
             firstName.setFocusable(false);
-        }if(facebookLoginDetails.has("last_name") && !facebookLoginDetails.isNull("last_name")) {
+        }
+        if (facebookLoginDetails.has("last_name") && !facebookLoginDetails.isNull("last_name")) {
             lastName.setText(facebookLoginDetails.getString("last_name"));
             lastName.setFocusable(false);
         }
-        if(facebookLoginDetails.has("email") && !facebookLoginDetails.isNull("email")) {
+        if (facebookLoginDetails.has("email") && !facebookLoginDetails.isNull("email")) {
             email.setText(facebookLoginDetails.getString("email"));
         }
 
         dialog.show();
         //Overriding the handler immediately after show is probably a better approach than OnShowListener as described below
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
-        {
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 startProcessDialog();
                 boolean checkDismiss = true;
-                if(TextUtils.isEmpty(email.getText().toString())) {
+                if (TextUtils.isEmpty(email.getText().toString())) {
                     email.setError("This cannot be empty");
                     checkDismiss = false;
                     dismissProcessDialog();
                 }
-                if(TextUtils.isEmpty(mobile.getText().toString())) {
+                if (TextUtils.isEmpty(mobile.getText().toString())) {
                     mobile.setError("This cannot be empty");
                     checkDismiss = false;
                     dismissProcessDialog();
                 }
-                if(TextUtils.isEmpty(password.getText().toString())) {
+                if (TextUtils.isEmpty(password.getText().toString())) {
                     password.setError("This cannot be empty");
                     checkDismiss = false;
                     dismissProcessDialog();
                 }
-                if((confirmPassword.getText()).equals(password.getText())) {
+                if ((confirmPassword.getText()).equals(password.getText())) {
                     confirmPassword.setError("Password Mismatch");
                     checkDismiss = false;
                     dismissProcessDialog();
@@ -709,48 +729,55 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
 
                 //Do stuff, possibly set wantToCloseDialog to true then...
-                if(checkDismiss){
+                if (checkDismiss) {
                     //Todo submit the form
                     try {
+                        if (facebookLoginDetails.has("email")) facebookLoginDetails.remove("email");
+                        if (facebookLoginDetails.has("mobile"))
+                            facebookLoginDetails.remove("mobile");
+                        if (facebookLoginDetails.has("password"))
+                            facebookLoginDetails.remove("password");
+
                         facebookLoginDetails.accumulate("email", email.getText().toString());
-                        facebookLoginDetails.accumulate("mobile",mobile.getText().toString());
+                        facebookLoginDetails.accumulate("mobile", mobile.getText().toString());
                         facebookLoginDetails.accumulate("password", password.getText().toString());
 
                         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
-                                System.out.println(response.toString());
-                                try{
-                                    if(response.getBoolean("newusercreated")){
+                                //system.out.println(response.toString());
+                                try {
+                                    if (response.getBoolean("newusercreated")) {
                                         //Todo show otp dialog
-                                        System.out.println("check 1");
+                                        //system.out.println("check 1");
                                         dismissProcessDialog();
                                         dialog.dismiss();
-                                        System.out.println("check 2");
+                                        //system.out.println("check 2");
                                         createOTPDialog(facebookLoginDetails.getString("mobile"));
-                                        System.out.println("check 3");
-                                    }
-                                    else{
+                                        //system.out.println("check 3");
+                                    } else {
                                         //do nothing
                                         dialog.dismiss();
                                         dismissProcessDialog();
                                         Toast.makeText(getApplicationContext(), response.getString("reason"), Toast.LENGTH_LONG).show();
                                     }
-                                }catch(Exception e){
+                                } catch (Exception e) {
                                     dismissProcessDialog();
                                     dialog.dismiss();
                                     Log.e("EXCEPTION", e.getMessage());
+                                    createAlertDialog("Error", "Action Failed. Please try again");
                                 }
                             }
                         };
 
-                        volleyRequests(facebookLoginDetails,"http://www.hoi.co.in/enduser/signupuser" ,listener);
+                        volleyRequests(facebookLoginDetails, "http://www.hoi.co.in/enduser/signupuser", listener);
 
                         //Todo check if signup succeeded
                         //new UserLoginTask(email.getText().toString(),password.getText().toString()).execute();
 
                     } catch (JSONException e) {
                         e.printStackTrace();
+                        createAlertDialog("Error", "Action Failed. Please try again");
                     }
                 }
             }
@@ -758,7 +785,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         Log.d("SIGNUP_DIALOG", "Sign up dialog created");
     }
 
-    public void createOTPDialog(final String phone){
+    public void createOTPDialog(final String phone) {
         //
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -766,7 +793,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         LayoutInflater inflater = this.getLayoutInflater();
         View dView = inflater.inflate(R.layout.otp_dialog, null);
 
-        final EditText otp = (EditText)dView.findViewById(R.id.otp);
+        final EditText otp = (EditText) dView.findViewById(R.id.otp);
 
 
         // Add the buttons
@@ -774,7 +801,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 // Add action buttons
                 .setPositiveButton(R.string.submit, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int id) {}
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
                 })
                 .setNegativeButton(R.string.resend, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -791,30 +819,30 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 if (otp.getText().toString().isEmpty()) {
                     otp.setError("No Code entered");
                 } else {
-                   //Todo send otp using volley and resend if otp mismatch
+                    //Todo send otp using volley and resend if otp mismatch
                     Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            try{
-                                if(response.getBoolean("response")){
+                            try {
+                                if (response.getBoolean("response")) {
 
                                     mAuthTask = new UserLoginTask(facebookLoginDetails.getString("email"), facebookLoginDetails.getString("password"));
                                     startProcessDialog();
                                     mAuthTask.execute((Void) null);
                                     dismissProcessDialog();
                                     dialog.dismiss();
-                                }
-                                else{
+                                } else {
 
                                     otp.setError("OTP mismatch");
                                 }
-                            }catch(Exception e){
+                            } catch (Exception e) {
                                 Log.e("EXCEPTION", e.getMessage());
+                                Toast.makeText(getApplicationContext(), "Connection Error", Toast.LENGTH_LONG).show();
                             }
                         }
                     };
                     try {
-                        volleyRequests(new JSONObject().accumulate("otp",otp.getText().toString()), "http://www.hoi.co.in/enduser/confirmphone/"+phone,
+                        volleyRequests(new JSONObject().accumulate("otp", otp.getText().toString()), "http://www.hoi.co.in/enduser/confirmphone/" + phone,
                                 listener);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -835,6 +863,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                             }
                         } catch (Exception e) {
                             Log.e("EXCEPTION", e.getMessage());
+                            Toast.makeText(LoginActivity.this.getApplicationContext(), "Connection Error", Toast.LENGTH_LONG).show();
                         }
                     }
                 };
@@ -845,7 +874,110 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
     }
 
-    private void startProcessDialog(){
+    public void resendOTP(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+
+        // Get the layout inflater
+        LayoutInflater inflater = LoginActivity.this.getLayoutInflater();
+        View dView = inflater.inflate(R.layout.dialog_forgotpass, null);
+
+        final EditText otp = (EditText) dView.findViewById(R.id.otp);
+        otp.setHint("Enter Mobile No");
+
+        ((TextView) dView.findViewById(R.id.otp)).setText("Resend OTP");
+
+        // Add the buttons
+        builder.setView(dView)
+
+                // Add action buttons
+                .setPositiveButton(R.string.resend, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                })
+                .setNegativeButton(R.string.submit, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //nothing to be done when user cancels his action
+                    }
+                });
+        // Set other dialog properties
+        // Create the AlertDialog
+
+
+        final AlertDialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mPhone.isEmpty() || mPhone.equals("")){
+                    otp.setError("First Resent OTP");
+                }
+                else if (otp.getText().toString().isEmpty()) {
+                    otp.setError("No Code entered");
+                } else {
+                    //Todo send otp using volley and resend if otp mismatch
+                    Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                if (response.getBoolean("response")) {
+                                    Toast.makeText(getApplicationContext(), "Your Account is activated", Toast.LENGTH_LONG).show();
+                                } else {
+                                    otp.setError("OTP mismatch");
+                                }
+                            } catch (Exception e) {
+                                Log.e("EXCEPTION", e.getMessage());
+                                Toast.makeText(getApplicationContext(), "Connection Error", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    };
+                    try {
+                        volleyRequests(new JSONObject().accumulate("otp", otp.getText().toString()), "http://www.hoi.co.in/enduser/confirmphone/" + mPhone,
+                                listener);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    dialog.dismiss();
+                }
+            }
+        });
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String mobileNo = otp.getText().toString();
+                if (mobileNo.isEmpty()) {
+                    otp.setError("Enter Mobile no");
+                } else if (mobileNo.length() != 10 || !mobileNo.matches("[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]")) {
+                    otp.setError("wrong mobile number");
+                } else {
+                    Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                if (!response.getBoolean("response")) {
+                                    Toast.makeText(getApplicationContext(), "OTP not sent!", Toast.LENGTH_LONG).show();
+                                }else{
+                                    Toast.makeText(getApplicationContext(), "OTP sent", Toast.LENGTH_LONG).show();
+                                    otp.setHint("Enter OTP");
+                                    mPhone = mobileNo;
+                                }
+                            } catch (Exception e) {
+                                Log.e("EXCEPTION", e.getMessage());
+                                Toast.makeText(LoginActivity.this.getApplicationContext(), "Connection Error", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    };
+                    volleyRequests(new JSONObject(), "http://www.hoi.co.in/enduser/resendOTP/" + mPhone,
+                            listener);
+                }
+            }
+        });
+
+    }
+
+    private void startProcessDialog() {
         //Process running dialog
         processDialog = new ProgressDialog(LoginActivity.this);
         processDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -855,8 +987,9 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         processDialog.show();
     }
 
-    private void dismissProcessDialog(){
-        processDialog.dismiss();
+    private void dismissProcessDialog() {
+        if (processDialog != null)
+            processDialog.dismiss();
     }
 
     /**
@@ -905,7 +1038,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
                 HttpClient httpclient = new DefaultHttpClient();
                 try {
-                    System.out.println("ch2");
+                    //system.out.println("ch2");
                     response = httpclient.execute(request);
 
                 } catch (ClientProtocolException e) {
@@ -915,12 +1048,10 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            System.out.println("ch3");
             InputStream inputStream = null;
             String result = null;
             try {
-                System.out.println("ch4");
+                //system.out.println("ch4");
                 HttpEntity entity = response.getEntity();
 
                 inputStream = entity.getContent();
@@ -928,83 +1059,76 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"), 8);
                 StringBuilder sb = new StringBuilder();
 
-                System.out.println("ch5");
+                //system.out.println("ch5");
                 String line = null;
                 while ((line = reader.readLine()) != null) {
                     sb.append(line + "\n");
                 }
                 result = sb.toString();
             } catch (Exception e) {
+                asyncDialog.dismiss();
                 Log.d("Exception: ", e.getMessage());
+
             } finally {
-                System.out.println(result);
+                //system.out.println(result);
                 try {
                     if (inputStream != null) inputStream.close();
                 } catch (Exception squish) {
                 }
             }
-                try {
-                    jObject = new JSONObject(result);
-                    if (jObject.getInt("code") == 1) {
-                        System.out.println(mEmail + " " + mPassword);
-                        prefs.edit().putString("username", mEmail).commit();
-                        prefs.edit().putString("password", mPassword).commit();
-
-                        intent = new Intent(LoginActivity.this, MainActivity.class);
-                        intent.putExtra("userData", result);
-                        intent.putExtra("authenticationHeader", authenticationHeader);
-
-                        result = "login";
-
-                    } else if ((jObject.getInt("code") == 5)) {
-
-                        result = "time";
-                    } else {
-                        result = "failed";
-                    }
-
-                } catch (JSONException e) {
-                    //mPasswordView.setError(getString(R.string.error_incorrect_password));
-                    e.printStackTrace();
-                }
-                asyncDialog.dismiss();
-
             return result;
         }
 
         @Override
         protected void onPostExecute(final String data) {
+            asyncDialog.dismiss();
             mAuthTask = null;
-            if (data.equals("login")) {
-                asyncDialog.dismiss();
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                getApplicationContext().startActivity(intent);
-                LoginActivity.this.finish();
-            }else if(data.equals("time")){
-                asyncDialog.dismiss();
-                new AlertDialog.Builder(LoginActivity.this)
-                        .setTitle("Time Mismatch")
-                        .setCancelable(false)
-                        .setMessage("Please check your time is accurate!")
-                        .setPositiveButton("Change DateTime", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                startActivity(new Intent(android.provider.Settings.ACTION_DATE_SETTINGS));
-                            }
-                        })
-                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // do nothing
-                            }
-                        })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
-            }else{
-                asyncDialog.dismiss();
-                mPasswordView.setError(getString(R.string.error_incorrect));
-                mPasswordView.requestFocus();
+            try {
+                jObject = new JSONObject(data);
+                int responseCode = jObject.getInt("code");
+                switch (responseCode) {
+                    case 1:
+                        //Login success ... Loading main activity
+                        Log.d("Login", "Setting Parameters for Main Activity");
+                        prefs.edit().putString("username", mEmail).commit();
+                        prefs.edit().putString("password", mPassword).commit();
+                        intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.putExtra("username", jObject.getString("username"));
+                        intent.putExtra("name", jObject.getString("name"));
+                        intent.putExtra("phone", jObject.getString("phone"));
+                        intent.putExtra("displaypic", jObject.getString("displaypic"));
+                        intent.putExtra("availableinr", jObject.getDouble("availableinr"));
+                        intent.putExtra("ratingpending", jObject.getBoolean("hastorateprevious"));
+                        intent.putExtra("inride", jObject.getBoolean("inaride"));
+                        intent.putExtra("awaitingride", jObject.getBoolean("awaitingride"));
+                        intent.putExtra("genriderequestid", jObject.getInt("genriderequestid"));
+                        intent.putExtra("authenticationHeader", authenticationHeader);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        Log.d("Login", "Finished Setting Parameters for Main Activity");
+                        getApplicationContext().startActivity(intent);
+                        LoginActivity.this.finish();
+                        break;
+                    case 2:
+                        Toast.makeText(getApplicationContext(), "Application not Validated", Toast.LENGTH_LONG).show();
+                        mPasswordView.setError(getString(R.string.error_incorrect));
+                        mPasswordView.requestFocus();
+                        break;
+                    case 3:
+                        Toast.makeText(getApplicationContext(), "User Not Authorized", Toast.LENGTH_LONG).show();
+                        break;
+                    case 4:
+                        Toast.makeText(getApplicationContext(), "Encrypted Key Not Validated", Toast.LENGTH_LONG).show();
+                        mPasswordView.setError(getString(R.string.error_incorrect));
+                        mPasswordView.requestFocus();
+                        break;
+                    case 5:
+                        Toast.makeText(getApplicationContext(), "Time not Validated", Toast.LENGTH_LONG).show();
+                        break;
+                }
+            } catch (Exception e) {
+                Toast.makeText(getApplicationContext(), "Some Error Occured", Toast.LENGTH_LONG).show();
             }
             super.onPostExecute(data);
-
         }
 
         @Override
@@ -1048,14 +1172,15 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         }
     }
 
-    private void volleyRequests(JSONObject data, String url, Response.Listener<JSONObject> listener){
-        System.out.println(data.toString());
-        System.out.println(url);
+    private void volleyRequests(JSONObject data, String url, Response.Listener<JSONObject> listener) {
+        //system.out.println(data.toString());
+        //system.out.println(url);
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                if(error != null){
+                if (error != null) {
                     Log.e("EXCEPTION", error.toString());
+                    dismissProcessDialog();
                 }
                 Log.e("EXCEPTION", "Exception occured in volley");
             }

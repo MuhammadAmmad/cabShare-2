@@ -1,0 +1,86 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/grey"
+        android:orientation="vertical"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal"
+            android:layout_alignParentTop="true">
+
+            <ImageView android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_logo"
+                android:layout_marginLeft="10dp"/>
+
+            <TextView android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/dialogTitle"
+                android:text="Feedback"
+                android:textColor="@color/dialogtitletext"
+                android:textSize="@dimen/abc_text_size_large_material"
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="center_horizontal|center_vertical"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            android:orientation="vertical"
+            android:background="@drawable/greybackground"
+            >
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Comment (Limit 512 characters)"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"/>
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Let us know what you think!"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"/>
+            <ScrollView
+                android:layout_width="fill_parent"
+                android:layout_height="70dp"
+                android:background="#f3f3f3"
+                >
+
+                <EditText android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/feedback"
+                    android:hint="Your Feedback"
+                    android:paddingLeft="5dp"
+                    android:layout_gravity="center_vertical"
+                    android:maxLength="512"
+                    />
+
+            </ScrollView>
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Have a good day!"
+                android:gravity="center"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"/>
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

@@ -14,110 +14,90 @@
             android:layout_alignParentStart="true"
             android:id="@+id/search_view">
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="5dp"
-                android:background="#00000000">
-
-            </LinearLayout>
-            <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:background="@drawable/search_background"
-                android:padding="10dp"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true">
+                android:padding="5dp">
 
                 <ImageView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/source_search"
                     android:clickable="true"
-                    android:paddingLeft="16dp"
+                    android:paddingLeft="10dp"
                     android:layout_weight="0.15"
                     android:src="@drawable/ic_action_search"
                     android:onClick="sendMessageSource"/>
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:paddingLeft="12dp"
-                    android:paddingTop="4dp"
+                    android:paddingLeft="5dp"
                     android:layout_weight="0.7"
-                    android:maxLength="30"
-                    android:ellipsize = "marquee"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="Pick Up Address.."
+                    android:singleLine="true"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:hint="Pick Up Address"
                     android:id="@+id/source_address" />
 
                 <ImageView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:id="@+id/save_source"
                     android:clickable="true"
+                    android:layout_gravity="center_vertical"
                     android:layout_weight="0.15"
-                    android:src="@drawable/ic_action_favorite"
+                    android:src="@drawable/favorite_selector"
                     android:onClick="saveSource" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="5dp"
-                android:background="#00000000">
-
             </LinearLayout>
 
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:background="@drawable/search_background"
-                android:padding="10dp"
+                android:padding="5dp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true">
 
                 <ImageView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/destination_search"
                     android:clickable="true"
-                    android:paddingLeft="16dp"
+                    android:paddingLeft="10dp"
                     android:layout_weight="0.15"
                     android:src="@drawable/ic_action_search"
                     android:onClick="sendMessageDestination"/>
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:paddingLeft="12dp"
-                    android:maxLength="30"
-                    android:paddingTop="4dp"
-                    android:ellipsize = "marquee"
+                    android:paddingLeft="5dp"
+                    android:singleLine="true"
                     android:layout_weight="0.7"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="Drop Address.."
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:hint="Drop Address"
                     android:id="@+id/destination_address" />
 
                 <ImageView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:id="@+id/save_destination"
+                    android:layout_gravity="center_vertical"
                     android:clickable="true"
                     android:layout_weight="0.15"
-                    android:src="@drawable/ic_action_favorite"
+                    android:src="@drawable/favorite_selector"
                     android:onClick="saveDestination" />
             </LinearLayout>
 
@@ -135,13 +115,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_action_about"
+                android:background="@drawable/special_button_selector"
                 android:id="@+id/shareCabRates"
                 android:onClick="showCabRates"
-                android:textSize="20dp"
-                android:hint="Cab Rates"
                 android:layout_above="@+id/action_button"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
+                android:layout_marginRight="10dp"
                 android:layout_gravity="right" />
 
             <LinearLayout

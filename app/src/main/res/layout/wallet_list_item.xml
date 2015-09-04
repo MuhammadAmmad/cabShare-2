@@ -4,20 +4,16 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/refresh_selector"
         android:padding="5dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="0.2"
                 android:layout_marginLeft="10dp"
                 android:orientation="vertical">
 
@@ -25,43 +21,42 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_weight="0.7"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     android:layout_gravity="center_horizontal"
                     android:id="@+id/transType"
                     />
-
-
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.3"
                     android:layout_marginTop="10dp"
+                    android:layout_gravity="center"
                     android:textSize="@dimen/abc_text_size_small_material"
-                    android:id="@+id/id"
-                    android:text=""/>
+                    android:id="@+id/id"/>
 
             </LinearLayout>
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="0.6"
                 android:layout_height="wrap_content">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_gravity="center"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text=""
+                    android:text="No Transaction"
                     android:id="@+id/trans_detail" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="20dp"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_marginTop="10dp"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text=""
                     android:id="@+id/trans_time" />
             </LinearLayout>
@@ -69,7 +64,8 @@
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:layout_marginLeft="30dp"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="0.2"
                 android:layout_height="wrap_content">
                 <TextView
                     android:layout_marginRight="5dp"
@@ -77,8 +73,8 @@
                     android:textColor="@color/lightgreen"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="25dp"
-                    android:text="No Transactions Made"
+                    android:gravity="center"
+                    android:textSize="@dimen/abc_text_size_large_material"
                     android:id="@+id/trans_cost" />
 
                 <ImageView
@@ -86,8 +82,8 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_more"
                     android:visibility="invisible"
+                    android:gravity="center"
                     android:id="@+id/transSummary"/>
                 </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
 </LinearLayout>

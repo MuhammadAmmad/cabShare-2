@@ -38,46 +38,37 @@
             android:background="#ffffff"
             android:id="@+id/linearLayout">
 
-
-
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal">
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:orientation="vertical">
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         android:layout_marginTop="10dp"
-                        android:src="@drawable/user1"
+                        android:src="@drawable/ic_action_group"
                         android:layout_marginLeft="10dp"
                         android:id="@+id/driver_pic"
                         />
-                </LinearLayout>
 
                 <LinearLayout android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
                     android:orientation="vertical"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="10dp"
-                    android:layout_weight="0.4"
+                    android:layout_weight="0.5"
                     >
                     <TextView
                         android:id="@+id/driver_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:singleLine="true"
                         android:padding="5dp"
                         android:layout_gravity="center"
-                        android:text="Driver Name"/>
+                        android:text="Awaiting"/>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="left"
+                        android:layout_gravity="center"
                         android:id="@+id/driverContact"
                         android:onClick="makecall">
 
@@ -91,16 +82,15 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="5dp"
-                            android:text="08826235246" />
+                            android:singleLine="true"
+                            android:text="9654965311" />
                     </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
                     android:orientation="vertical"
-                    android:layout_weight="0.4"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="10dp"
+                    android:layout_weight="0.5"
                     >
                     <TextView
                         android:id="@+id/car_make"
@@ -108,7 +98,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="left"
-                        android:text="Maruti Swift"/>
+                        android:singleLine="true"
+                        android:text="Awaiting"/>
 
                     <TextView
                         android:id="@+id/car_no"
@@ -116,7 +107,7 @@
                         android:padding="5dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="left"
-                        android:text="08826235246" />
+                        android:text="Awaiting" />
                 </LinearLayout>
 
             </LinearLayout>

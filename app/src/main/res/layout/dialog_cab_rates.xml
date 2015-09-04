@@ -13,7 +13,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:background="#e8e8e7"
+            android:layout_marginBottom="10dp"
+            android:background="@color/grey"
             android:orientation="horizontal"
             android:layout_alignParentTop="true">
 
@@ -25,18 +26,33 @@
 
             <TextView android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Cab Rates"
-                android:textColor="#2582C5"
-                android:textSize="18sp"
-                android:layout_marginLeft="20dp"
-                android:textStyle="bold"
+                android:text="Information"
+                android:textColor="@color/dialogtitletext"
+                android:textSize="@dimen/abc_text_size_large_material"
+                android:layout_marginLeft="10dp"
                 android:layout_gravity="center_horizontal|center_vertical"/>
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:background="@color/lightblue"
+            android:orientation="horizontal"
+            android:layout_alignParentTop="true">
+
+
+            <TextView android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cab Rates"
+                android:textSize="18sp"
+                android:layout_marginLeft="20dp"
+                android:layout_gravity="center_horizontal|center_vertical"/>
+        </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#f3f3f3"
+                android:background="@color/lightgrey"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -69,7 +85,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#f3f3f3"
+                android:background="@color/lightgrey"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -106,7 +122,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#f3f3f3"
+                android:background="@color/lightgrey"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -147,7 +163,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#f3f3f3"
+                android:background="@color/lightgrey"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -189,6 +205,121 @@
                 </LinearLayout>
 
             </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/lightgrey"
+            android:padding="5dp"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/abc_text_size_small_material"
+                    android:text="\u20B9 0.5/min duration charges"/>
+            </LinearLayout>
 
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/lightgrey"
+            android:padding="5dp"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/abc_text_size_small_material"
+                    android:text="\u20B9 30 is minimum fare"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:background="@color/lightblue"
+            android:orientation="horizontal"
+            android:layout_alignParentTop="true">
+
+
+            <TextView android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancellation Charges"
+                android:textSize="18sp"
+                android:layout_marginLeft="20dp"
+                android:layout_gravity="center_horizontal|center_vertical"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/lightgrey"
+            android:padding="5dp"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/abc_text_size_small_material"
+                    android:text="1  \u20B9 0 if cancelled within 5 mins of booking"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/lightgrey"
+            android:padding="5dp"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/abc_text_size_small_material"
+                    android:text="2  \u20B9 100 if ride is 5 or less mins away"/>
+            </LinearLayout>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/lightgrey"
+            android:padding="5dp"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/abc_text_size_small_material"
+                    android:text="3  \u20B9 30 in all other cases"/>
+            </LinearLayout>
+        </LinearLayout>
+        </LinearLayout>
+
+
 </ScrollView>

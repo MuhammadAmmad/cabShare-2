@@ -98,10 +98,26 @@ public class FragmentMain extends Fragment {
                     ((MainActivity)getActivity()).zoomToSource();
                 }
             });
+            tvSource.setOnLongClickListener(new View.OnLongClickListener() {
+
+                @Override
+                public boolean onLongClick(View view) {
+                    ((MainActivity) getActivity()).sendMessageSource();
+                    return true;
+                }
+            });
             tvDestination.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((MainActivity)getActivity()).zoomToDestination();
+                    ((MainActivity) getActivity()).zoomToDestination();
+                }
+            });
+            tvDestination.setOnLongClickListener(new View.OnLongClickListener() {
+
+                @Override
+                public boolean onLongClick(View view) {
+                    ((MainActivity) getActivity()).sendMessageDestination();
+                    return true;
                 }
             });
         }
@@ -126,8 +142,14 @@ public class FragmentMain extends Fragment {
 
         de.hdodenhof.circleimageview.CircleImageView c1,c2,c3,cUnknown;
         c1 = (de.hdodenhof.circleimageview.CircleImageView) getView().findViewById(R.id.coPassenger1);
+        c1.setImageResource(R.drawable.male_user);
+        c1.setOnClickListener(null);
         c2 = (de.hdodenhof.circleimageview.CircleImageView) getView().findViewById(R.id.coPassenger2);
+        c2.setImageResource(R.drawable.male_user);
+        c2.setOnClickListener(null);
         c3 = (de.hdodenhof.circleimageview.CircleImageView) getView().findViewById(R.id.coPassenger3);
+        c3.setImageResource(R.drawable.male_user);
+        c3.setOnClickListener(null);
         cUnknown = (de.hdodenhof.circleimageview.CircleImageView) getView().findViewById(R.id.unknown);
 
         if(numOfcoPassengers >= 1){
@@ -208,6 +230,8 @@ public class FragmentMain extends Fragment {
     }
 
     public void setRideSummary(JSONObject rideSummaryData){
+
+        //driverid driverpic
         try {
 
             TextView distance = (TextView) getView().findViewById(R.id.distance);
@@ -216,14 +240,15 @@ public class FragmentMain extends Fragment {
             TextView duration = (TextView) getView().findViewById(R.id.duration);
             duration.setText(((double) Math.round(rideSummaryData.getDouble("timetakenmins") * 100) / 100)+"");
 
-            Double totalFare =rideSummaryData.getDouble("totaldistancefare") + rideSummaryData.getDouble("totaltimefare") + rideSummaryData.getDouble("tolltax");
-            ((MainActivity)getActivity()).addBalance(-totalFare);
+            Double totalFare =rideSummaryData.getDouble("totalfare");
             TextView fare = (TextView) getView().findViewById(R.id.fare);
             fare.setText("\u20B9" + ((double) Math.round(totalFare * 100) / 100));
 
+            DetailDriver driver = new DetailDriver(rideSummaryData.getString("driverpic"));
+
             de.hdodenhof.circleimageview.CircleImageView driverpic =
                     (de.hdodenhof.circleimageview.CircleImageView) getView().findViewById(R.id.driverPic);
-            driverpic.setImageBitmap(((MainActivity)getActivity()).getDriverPic());
+            driverpic.setImageBitmap(driver.driverPic);
 
 
         } catch (JSONException e) {

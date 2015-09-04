@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+        <color name="lightblue">#ff9acec9</color>
+        <color name="button">#ddff905e</color>
+        <color name="buttonpressed">#ddffb094</color>
+        <color name="dialogtitletext">#2582C5</color>
+        <color name="lightgrey">#f3f3f3</color>
+        <color name="grey">#e8e8e7</color>
+        <color name="darkgrey">#AAAAAA</color>
+        <color name="toolbarcolor">#ff9acec9</color>
+        <color name="notificationbarcolor">#ff80CBC4</color>
         <color name="white">#FFFFFF</color>
-        <color name="grey">#BBBBBB</color>
+
         <color name="background">#0044AA</color>
         <color name="bluelight">#449DEF</color>
         <color name="bluedark">#2F6699</color>
@@ -11,4 +20,5 @@
         <color name="orangedark">#BB6008</color>
         <color name="black">#000000</color>
         <color name="lightgreen">#8BC34A</color>
+
 </resources>

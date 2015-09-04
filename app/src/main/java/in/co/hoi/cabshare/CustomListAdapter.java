@@ -61,6 +61,7 @@ public class CustomListAdapter extends BaseAdapter implements View.OnClickListen
 
         public TextView text1;
         public TextView text2;
+        public de.hdodenhof.circleimageview.CircleImageView locTypeImg;
 
     }
 
@@ -78,8 +79,9 @@ public class CustomListAdapter extends BaseAdapter implements View.OnClickListen
             /****** View Holder Object to contain tabitem.xml file elements ******/
 
             holder = new ViewHolder();
-            holder.text1=(TextView)v.findViewById(R.id.address_primary);
-            holder.text2 = (TextView) v.findViewById(R.id.address_secondary);
+            holder.locTypeImg = (de.hdodenhof.circleimageview.CircleImageView) v.findViewById(R.id.loc_type);
+            holder.text1=(TextView)v.findViewById(R.id.address1);
+            holder.text2 = (TextView) v.findViewById(R.id.address2);
 
             /************  Set holder with LayoutInflater ************/
             v.setTag( holder );
@@ -95,6 +97,31 @@ public class CustomListAdapter extends BaseAdapter implements View.OnClickListen
 
             /************  Set Model values in Holder elements ***********/
 
+            if(tempValues.getType().equals("Home"))
+            {
+                holder.locTypeImg.setImageResource(R.drawable.ic_home);
+            }
+            else if(tempValues.getType().equals("Office")){
+                holder.locTypeImg.setImageResource(R.drawable.ic_business_black_24dp);
+            }
+            else if(tempValues.getType().equals("Current")){
+                holder.locTypeImg.setImageResource(R.drawable.ic_my_location_black_24dp);
+            }
+            else if(tempValues.getType().equals("Favorite1")){
+                holder.locTypeImg.setImageResource(R.drawable.ic_star_border_black_24dp);
+            }
+            else if(tempValues.getType().equals("Favorite2")){
+                holder.locTypeImg.setImageResource(R.drawable.ic_star_border_black_24dp);
+            }
+            else if(tempValues.getType().equals("Favorite3")){
+                holder.locTypeImg.setImageResource(R.drawable.ic_star_border_black_24dp);
+            }
+            else if(tempValues.getType().equals("Airport")){
+                holder.locTypeImg.setImageResource(R.drawable.ic_local_airport_black_24dp);
+            }
+            else if(tempValues.getType().equals("Railway")){
+                holder.locTypeImg.setImageResource(R.drawable.ic_directions_railway_black_24dp);
+            }
             holder.text1.setText( tempValues.getAddress1() );
             holder.text2.setText( tempValues.getAddress2() );
 

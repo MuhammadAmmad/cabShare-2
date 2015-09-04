@@ -3,16 +3,11 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-
         <!-- customize the color palette -->
-        <item name="colorPrimary">@color/material_blue_500</item>
-        <item name="colorPrimaryDark">@color/material_blue_700</item>
-        <item name="colorAccent">@color/material_orange</item>
-        <item name="colorButtonNormal">#aaf39c00</item>
-
-
+        <item name="colorPrimary">@color/lightblue</item>
+        <item name="colorPrimaryDark">@color/notificationbarcolor</item>
+        <item name="colorAccent">@color/toolbarcolor</item>
         <item name="android:actionBarStyle">@style/MyActionBar</item>
-
         <!-- Support library compatibility -->
         <item name="actionBarStyle">@style/MyActionBar</item>
     </style>
@@ -22,18 +17,17 @@
     <!-- ActionBar styles -->
     <style name="MyActionBar"
         parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@color/material_orange</item>
+        <item name="colorPrimary">@color/lightblue</item>
+        <item name="colorPrimaryDark">@color/notificationbarcolor</item>
+        <item name="colorAccent">@color/toolbarcolor</item>
+        <item name="android:background">@color/toolbarcolor</item>
         <item name="android:logo">@drawable/ic_logo</item>
 
         <!-- Support library compatibility -->
-        <item name="background">@color/material_orange</item>
+        <item name="background">@color/toolbarcolor</item>
         <item name="logo">@drawable/ic_logo</item>
     </style>
 
-    <color name="material_orange">#FFBB00</color>
-    <color name="material_blue_500">#33B5E5</color>
-    <color name="material_blue_700">#0099CC</color>
-    <color name="dark_grey">#cccc</color>
 
 
 

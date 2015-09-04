@@ -130,10 +130,13 @@ public class SearchActivity extends Activity {
     private void populateSavedPlaces(){
         if (l.contentEquals("S")) {
             String[] currentAddress = getAddress(currentCoordinate.latitude, currentCoordinate.longitude);
-            savedPlaces.add(new SavedPlaceItem(currentCoordinate.latitude, currentCoordinate.longitude, "Current Location",
+            savedPlaces.add(new SavedPlaceItem(currentCoordinate.latitude, currentCoordinate.longitude, "Current",
                     currentAddress[0], currentAddress[1]));
         }
-        savedPlaces.add(new SavedPlaceItem(28.5549, 77.0842 , "Airport", "Indira Gandhi International Airport", "New Delhi"));
+        savedPlaces.add(new SavedPlaceItem(28.5550, 77.0844 , "Airport", "Terminal 3", "Indira Gandhi International"));
+        savedPlaces.add(new SavedPlaceItem(28.5630, 77.1197 , "Airport", "Terminal 1", "Indira Gandhi International"));
+        savedPlaces.add(new SavedPlaceItem(28.5893, 77.2539 , "Railway", "Railway Station", "Hazrat Nizamuddin"));
+        savedPlaces.add(new SavedPlaceItem(28.6446, 77.2196 , "Railway", "Railway Station", "New Delhi"));
 
         String[] str = {"Home", "Office", "Favorite1", "Favorite2", "Favorite3"};
             JSONObject jsonObject;

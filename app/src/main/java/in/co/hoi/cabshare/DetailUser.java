@@ -13,18 +13,24 @@ public class DetailUser {
     String username;
     String phone;
     String displayPic;
-    Double availableINR;
 
-    DetailUser(JSONObject userData){
-        try{
+    DetailUser(JSONObject userData) {
+        try {
             name = userData.getString("name");
             username = userData.getString("username");
             phone = userData.getString("phone");
             displayPic = userData.getString("displaypic");
-            availableINR = userData.getDouble("availableinr");
-        }catch(Exception e){
+        } catch (Exception e) {
             Log.d("Exception", "User Data");
         }
+    }
+
+    DetailUser(String name, String phone, String username, String displayPic) {
+        this.name = name;
+        this.username = username;
+        this.phone = phone;
+        this.displayPic = displayPic;
+
     }
 
 }

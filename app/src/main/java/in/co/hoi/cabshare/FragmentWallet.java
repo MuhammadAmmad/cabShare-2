@@ -49,7 +49,6 @@ import javax.crypto.IllegalBlockSizeException;
  */
 public class FragmentWallet extends Fragment{
     String authenticationHeader;
-    Double balance;
 
     public static final String AUTH_HEAD = "authenticationheader";
     private final static String BASE_SERVER_URL = "http://www.hoi.co.in/api/";
@@ -61,7 +60,6 @@ public class FragmentWallet extends Fragment{
 
         View view = inflater.inflate(R.layout.fragment_wallet, container, false);
         authenticationHeader = getArguments().getString(AUTH_HEAD);
-        balance = getArguments().getDouble("balance");
         TabHost tabs = (TabHost)view.findViewById(R.id.tabHost);
         tabs.setup();
 
@@ -70,9 +68,6 @@ public class FragmentWallet extends Fragment{
         walletTab.setContent(R.id.wallet);
         walletTab.setIndicator("Wallet");
         tabs.addTab(walletTab);
-
-        TextView remBalance = (TextView) view.findViewById(R.id.remaining_balance);
-        remBalance.setText("\u20B9 " + ((double) Math.round(balance) * 100) / 100);
 
         // Credit
         TabHost.TabSpec creditTab = tabs.newTabSpec("credit");
@@ -97,9 +92,9 @@ public class FragmentWallet extends Fragment{
         return view;
     }
 
-    public void setBalance(Double balance){
+    public void setBalance(int balance){
         TextView remBalance = (TextView) getView().findViewById(R.id.remaining_balance);
-        remBalance.setText("\u20B9 " + ((double) Math.round(balance) * 100) / 100);
+        remBalance.setText("\u20B9 " + balance);
     }
 
     public void setCredits(List<TransactionItem> transactionList){
@@ -112,88 +107,5 @@ public class FragmentWallet extends Fragment{
         WalletListAdapter debitsAdapter = new WalletListAdapter(getActivity(), transactionList, getResources());
         ListView debitlv = (ListView) getView().findViewById(R.id.debits_list);
         debitlv.setAdapter(debitsAdapter);
-    }
-
-    private class HttpPostTask extends AsyncTask<String, Void, String> {
-
-        private HttpResponse response;
-
-        @Override
-        protected String doInBackground(String... url) {
-            // TODO: attempt authentication against a network service.
-            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-            String currentDateandTime = sdf.format(new Date());
-            Encryptor encryptor = new Encryptor();
-            String encrptedkey = "";
-
-            try {
-                encrptedkey = encryptor.getEncryptedKeyValue(currentDateandTime);
-            } catch (InvalidKeyException e1) {
-                e1.printStackTrace();
-            } catch (IllegalBlockSizeException e1) {
-                e1.printStackTrace();
-            } catch (BadPaddingException e1) {
-                e1.printStackTrace();
-            } catch (UnsupportedEncodingException e1) {
-                e1.printStackTrace();
-            } catch (DecoderException e1) {
-                e1.printStackTrace();
-            }
-
-            try {
-
-                HttpPost request = new HttpPost(url[0]);
-                request.addHeader("Authorization", "Basic " + authenticationHeader);
-                request.addHeader("androidkey",encrptedkey);
-
-                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
-                nameValuePairs.add(new BasicNameValuePair("counter", currentDateandTime));
-
-                request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-                HttpClient httpclient = new DefaultHttpClient();
-
-                try {
-                    response = httpclient.execute(request);
-                } catch (ClientProtocolException e) {
-                    e.printStackTrace();
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            InputStream inputStream = null;
-            String result = null;
-            try {
-                HttpEntity entity = response.getEntity();
-                inputStream = entity.getContent();
-
-                // json is UTF-8 by default
-                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"), 8);
-                StringBuilder sb = new StringBuilder();
-                String line = null;
-                while ((line = reader.readLine()) != null)
-                {
-                    sb.append(line + "\n");
-                }
-                result = sb.toString();
-            } catch (Exception e) {
-                // Oops
-            }
-            finally {
-                try{if(inputStream != null)inputStream.close();}catch(Exception squish){}
-            }
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(final String data) {
-        }
-
-        @Override
-        protected void onCancelled() {
-
-        }
     }
 }

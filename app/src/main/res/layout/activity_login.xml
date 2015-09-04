@@ -42,7 +42,7 @@
         android:layout_marginBottom="@dimen/abc_text_size_caption_material"
         android:text="@string/action_sign_in"
         android:textStyle="bold"
-        android:background="#ff9acec9" />
+        android:background="@color/lightblue" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -63,8 +63,18 @@
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp"
         fb:com_facebook_login_text ="SignUp with Facebook"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Resend OTP"
+        android:textColor="#fffff6e9"
+        android:id="@+id/resend_otp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        android:layout_gravity="center_horizontal"
+        android:onClick="resendOTP"/>
 
     <ImageView
         android:baselineAlignBottom="true"

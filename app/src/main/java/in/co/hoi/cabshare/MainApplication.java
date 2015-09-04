@@ -67,12 +67,4 @@ public class MainApplication extends Application {
 
         }
     }
-
-    public void setRegId(String regid){
-        this.regID = regid;
-    }
-
-    public String getRegID(){
-        return regID;
-    }
 }
