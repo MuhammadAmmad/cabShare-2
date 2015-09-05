@@ -577,7 +577,7 @@ public class MainActivity extends ActionBarActivity implements android.location.
         fm.beginTransaction().replace(R.id.content_frame, displayFragment).commit();
         fm.executePendingTransactions();
 
-        setTitle("Invoice");
+        setTitle("Summary");
         mProgress = ProgressDialog.show(this, "",
                 "Please Wait..", true);
 

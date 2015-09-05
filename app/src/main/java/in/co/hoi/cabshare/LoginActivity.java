@@ -884,7 +884,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         final EditText otp = (EditText) dView.findViewById(R.id.otp);
         otp.setHint("Enter Mobile No");
 
-        ((TextView) dView.findViewById(R.id.otp)).setText("Resend OTP");
+        ((TextView) dView.findViewById(R.id.dialogTitle)).setText("Resend OTP");
 
         // Add the buttons
         builder.setView(dView)
@@ -923,6 +923,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                         public void onResponse(JSONObject response) {
                             try {
                                 if (response.getBoolean("response")) {
+                                    dialog.dismiss();
                                     Toast.makeText(getApplicationContext(), "Your Account is activated", Toast.LENGTH_LONG).show();
                                 } else {
                                     otp.setError("OTP mismatch");
@@ -939,7 +940,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    dialog.dismiss();
                 }
             }
         });
@@ -960,6 +960,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                                     Toast.makeText(getApplicationContext(), "OTP not sent!", Toast.LENGTH_LONG).show();
                                 }else{
                                     Toast.makeText(getApplicationContext(), "OTP sent", Toast.LENGTH_LONG).show();
+                                    otp.setText("");
                                     otp.setHint("Enter OTP");
                                     mPhone = mobileNo;
                                 }
@@ -969,7 +970,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                             }
                         }
                     };
-                    volleyRequests(new JSONObject(), "http://www.hoi.co.in/enduser/resendOTP/" + mPhone,
+                    volleyRequests(new JSONObject(), "http://www.hoi.co.in/enduser/resendOTP/" + mobileNo,
                             listener);
                 }
             }
