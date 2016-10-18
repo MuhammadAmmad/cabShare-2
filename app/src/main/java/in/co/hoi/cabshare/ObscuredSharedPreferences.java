@@ -1,4 +1,4 @@
-package in.co.hoi.cabshare;
+package in.co.hoi.rulyp;
 
         import android.content.Context;
         import android.content.SharedPreferences;

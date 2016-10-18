@@ -1,4 +1,4 @@
-package in.co.hoi.cabshare;
+package in.co.hoi.rulyp;
 
 import android.app.Activity;
 import android.app.AlertDialog;

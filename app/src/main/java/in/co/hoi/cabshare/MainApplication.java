@@ -33,6 +33,8 @@ public class MainApplication extends Application {
         sInstance = this;
         printHashKey();
 
+
+
         InstanceID instanceID = InstanceID.getInstance(this);
         try {
             String token = instanceID.getToken("89501960976",
